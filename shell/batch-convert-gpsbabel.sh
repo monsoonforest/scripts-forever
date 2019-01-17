@@ -5,4 +5,3 @@ for FILE in *.gpx
 do 
 	echo gpsbabel -w -i gpx -f "${FILE}" -o unicsv -F "${DST_DIR}/$(basename \"${FILE}\" .gpx).csv"
 done   
-

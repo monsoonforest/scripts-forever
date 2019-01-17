@@ -155,14 +155,3 @@ Export.image.toDrive({
 	});};
 	
 exportfunc('LANDSAT/LC08/C01/T1_SR/LC08_135039_20161031', '2016-10-31', 'B7', 'B5', 'B3', 1, 8500, 30);
-
-
-
-Export.image.toDrive({
-      image:pct,
-        description : "sentinel-2-munje"
-        folder: "gis-tillari",
-        scale: 10,
-        crs:"EPSG: 32643",
-        region: geometry  
-        });

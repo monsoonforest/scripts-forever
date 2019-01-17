@@ -1,7 +1,7 @@
 ## from http://amsantacco/blog/en/2015/11/28/classification-rhtml
 
 ##list of packages required
-packages <- c("rgdal", "tools", "raster", "caret", "randomForest", "caret")
+packages <- c("rgdal", "snow", "tools", "raster", "randomForest", "caret")
 
 ##call all packages at once instead of one at a time
 lapply(packages, library, character.only=TRUE)
@@ -32,9 +32,6 @@ RT_T45QUB_20170108T045151_B8A
 
 ##get names of the images
 names(img)
-
-##rename the images accordinglyrrm()
-names(img) <- paste0(c("2", "3", "4", "5", "6", "7", "8", "9", "11", "12", "8A"))
 
 ## function to write rasters in blocksized units to preserve system memory
 f4 <- function(x, filename, format, ...) 
@@ -114,6 +111,9 @@ setNA <- function(i, ...)
 ## have to do it individually for each raster till you find lapply
 setNA(i)
 
+img <- stack("MY RASTER")
+names(img) <- c("X1","X2","X3","X4","X5")
+
 
 ## train the data
 trainData <- shapefile("shp")
@@ -122,24 +122,37 @@ trainData <- shapefile("shp")
 responseCol <- "class"
 
 	dfAll = data.frame(matrix(vector(), nrow = 0, ncol = length(names(img)) + 1))   
-	 for (i in 1:length(unique(trainData[[responseCol]]))){                          
-	  category <- unique(trainData[[responseCol]])[i]
-	  categorymap <- trainData[trainData[[responseCol]] == category,]
-	  dataSet <- extract(img, categorymap)
-	  dataSet <- dataSet[!unlist(lapply(dataSet, is.null))]
-	  dataSet <- lapply(dataSet, function(x){cbind(x, class = as.numeric(rep(category, nrow(x))))})
-	  df <- do.call("rbind", dataSet)
-	  dfAll <- rbind(dfAll, df)
-	}
+ for (i in 1:length(unique(trainData[[responseCol]]))){
+  category <- unique(trainData[[responseCol]])[i]
+  categorymap <- trainData[trainData[[responseCol]] == category,]
+  dataSet <- extract(img, categorymap)
+  if(is(trainData, "SpatialPointsDataFrame")){
+    dataSet <- cbind(dataSet, class = as.numeric(rep(category, nrow(dataSet))))
+    dfAll <- rbind(dfAll, dataSet[complete.cases(dataSet),])
+  }
+  if(is(trainData, "SpatialPolygonsDataFrame")){
+    dataSet <- dataSet[!unlist(lapply(dataSet, is.null))]
+    dataSet <- lapply(dataSet, function(x){cbind(x, class = as.numeric(rep(category, nrow(x))))})
+    df <- do.call("rbind", dataSet)
+    dfAll <- rbind(dfAll, df)
+  }
+}
 
-	nsamples <- 6000
- sdfAll <- subset(dfAll[sample(1:nrow(dfAll), nsamples), ])
+nsamples <- 6000
+sdfAll <- subset(dfAll[sample(1:nrow(dfAll), nsamples), ])
+
+modFit_rf <- train(as.factor(class) ~ X1 + X2 + X3 + X4 + X5, method = "rf", data = sdfAll, na.action=na.omit)
+
+beginCluster()
+preds_rf <- clusterR(img, raster::predict, args = list(model = modFit_rf))
+endCluster()
+
+preds_rf <- predict(img, model=modFit_rf, na.rm=T)
 
 
-## to get names to change in the modFit
-names(img)
+table(factor(pred.rf, levels=min(test):max(test)), 
+      factor(test, levels=min(test):max(test)))
 
- modFit_rf <- train(as.factor(class) ~ X2 + X3 + X4 + X5 + X6 + X7 + X8 + X9 + X11 + X12 + X8A, method = "rf", data = sdfAll, na.action=na.omit)
- beginCluster()
-  preds_rf <- clusterR(img, raster::predict, args = list(model = modFit_rf))
-  endCluster()
+
+mod.rf <- train(as.factor(class) ~  X1 + X2 + X3 + X4 + X5, method = "rf", data = training_bc)
+pred.rf <- predict(mod.rf, testing)

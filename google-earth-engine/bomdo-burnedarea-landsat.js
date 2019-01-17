@@ -26,7 +26,9 @@ var filteredCollection = withCloudiness.filter(ee.Filter.lt('cloud', 40));
 
 // function to map LANDSAT 5 SCENE
 var mapitL5 = function(imagename, date){
-      var a = ee.Image(imagename).select(bandsl5).clip(bomdo);
+      var a = ee.Image(imagename)
+      .select(bandsl5) // select bands
+      .clip(bomdo); // clip to polygon extents
       var timestamp = ee.Date(a.get('system:time_start'));
       print('Timestamp: ', timestamp); // ee.Date
       Map.addLayer(a, {bands: ['B7', 'B4','B2'], min:0, max:3000}, date);
