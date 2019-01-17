@@ -1,0 +1,5 @@
+## RENAME FILES OR FOLDERS RECURSIVELY IN CURRENT DIRECTORY
+
+## SPECIFY TAREGT DIRECTORY AFTER FIND, IF REQUIRED
+
+find -depth -name "* *" -execdir rename 's/ /_/g' "{}" \;

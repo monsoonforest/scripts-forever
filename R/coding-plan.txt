@@ -1,0 +1,8 @@
+!!!!!!!!!!!!!!!!!!!!!!!!
+					 WORK PLAN IS
+						1. EVALUATE K-MEANS CLUSTERS FOR BAND1
+						2. MASK THE BRIGHT WATER, SNOW LAYER TO NA
+						3. SET ALL THOSE VALUES TO NA IN THE 532 RASTER
+						4. EVALUATE REUSLTS
+						5. RUN A LOOP ON ALL FILES FOR MASKING ETC. AND THEN CLASSFIY USING K-MEANS
+																										!!!!!!!!!!!!!!!!!!!!!!!

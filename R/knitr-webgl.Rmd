@@ -1,0 +1,18 @@
+---
+title: "Untitled"
+author: "chintan sheth"
+date: "15 January 2017"
+output: html_document
+---
+```{r setup}
+library(knitr)
+library(rgl)
+knit_hooks$set(webgl = hook_webgl)
+```
+
+```{r testgl, webgl=TRUE}
+x <- sort(rnorm(1000))
+y <- rnorm(1000)
+z <- rnorm(1000) + atan2(x,y)
+plot3d(x, y, z, col=rainbow(1000))
+```
