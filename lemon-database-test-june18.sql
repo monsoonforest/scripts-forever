@@ -2,9 +2,13 @@
 
 createdb lemontest
 
-csvsql --db postgresql:///lemontest --tables sites --insert /home/user/documents/lemon-india/database-creation/LEMON-SITES.csv 
+csvsql --db postgresql:///lemontest --tables SITE_DATA --insert /home/user/documents/lemon-india/database-creation/SITE_DATA.csv 
+csvsql --db postgresql:///lemontest --tables LITTERFALL_DATA --insert /home/user/documents/lemon-india/database-creation/seed_trap_flfm-cleanup/sirsi/LITTERFALL_DATA.csv
+csvsql --db postgresql:///lemontest --tables TRAP_CENSUSDATES --insert /home/user/documents/lemon-india/database-creation/seed_trap_flfm-cleanup/sirsi/TRAP_CENSUS.csv
+csvsql --db postgresql:///lemontest --tables TRAP_ID --insert /home/user/documents/lemon-india/database-creation/seed_trap_flfm-cleanup/sirsi/TRAP_ID.csv 
+csvsql --db postgresql:///lemontest --tables SEEDTRAP_DATA --insert /home/user/documents/lemon-india/database-creation/seed_trap_flfm-cleanup/sirsi/SEEDTRAP_DATA.csv 
+csvsql --db postgresql:///lemontest --tables SPECIES_DATA --insert /home/user/documents/lemon-india/database-creation/SPECIES_DATA.csv
 
-csvsql --db postgresql:///lemontest --tables gridid --insert /home/user/documents/lemon-india/database-creation/GRIDID-table.csv
 
 ## then type
 

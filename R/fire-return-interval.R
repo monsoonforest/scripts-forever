@@ -100,3 +100,22 @@ seventeenyearsum <- stackApply(yearlyfirestack, indices=rep(1,nlayers(yearlyfire
 DID you rename the file????
 ## write the raster! 
 writeRaster(seventeenyearsum, filename="seventeenyearfire-Win18-India", format="GTiff", overwrite=TRUE)
+
+
+reprojectit <- function(l,...) {
+	r <- raster(paste0(l))
+
+	sr <- "+proj=utm +zone=43 +datum=WGS84 +units=m +no_defs"
+
+	projected <- projectRaster(r, crs=sr)
+
+	projected[projected < 1] <- NA
+
+    year <- paste0(unlist(strsplit(paste0(unlist(l)[1]), split='.tif'))[1])
+
+    filepath2 <-  paste0(year)
+
+	writeRaster(projected, filename=filepath2, format="GTiff", overwrite=TRUE)
+}
+
+lapply(list, reprojectit)

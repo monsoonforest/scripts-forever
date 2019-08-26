@@ -3,13 +3,32 @@
 ## only those strings at specific intervals will be used as a column content
 ## BASICALLY THIS CODE WILL CREATE A NEW COLUMN IN EVERY CSV BASED ON A STRING (THAT HAS BEEN SPLIT) IN THE FILENAME
 
+
+
+ZERO IS A NUMBER AND THE FIRST ITEM IN THE ARRAY
+
+
 while IFS= read -r file; 
 do
 IFS='_'        
 string="($file)"
 array=($string)
-awk -v d="${array[2]}-${array[3]}-${array[4]}" -F"," 'BEGIN { OFS = "," } {$1=d; print}' "$file" > "${file%.*}_dated.csv"
-done < <(find . -name '*.csv')
+awk -v d="${array[3]}-${array[4]}-${array[5]}" -F"," 'BEGIN { OFS = "," } {$1=d; print}' "$file" > "${file%.*}_dated.csv"
+done < <(find . -name '*trimmed*.csv')
+
+
+
+
+## to add column name date amd use this one below
+
+while IFS= read -r file; 
+do
+IFS='_'        
+string="($file)"
+array=($string)
+awk -v d="${array[3]}-${array[4]}-${array[5]}" -F"," 'BEGIN { OFS = "," } {print $0, (NR>1?d:"date")}' "$file" > "${file%.*}_dated.csv"
+done < <(find . -name '*trimmed*.csv')
+
 
 
 

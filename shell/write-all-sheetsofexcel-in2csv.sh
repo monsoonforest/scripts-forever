@@ -6,7 +6,7 @@
 ## the ${file%.xls} expression will prefix the name of $file
 
 for file in $(find . -name '*.xls' -o -name '*.xlsx'); 
-do in2csv -n "$file" > ${file%.xls}-sheetnames.csv; done
+do in2csv --sheet "Eflux" "$file" > ${file%.xls}-sheetnames.csv; done
 
 
 ## HOW DO I USE THE -sheetnames.csv TO SAVE SPECIFIC SHEETS OF A SPREADSHEET FILE
