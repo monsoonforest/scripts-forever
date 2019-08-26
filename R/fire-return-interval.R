@@ -29,7 +29,7 @@ batch_reclass <- function(x,...){
 		rc <- reclassify(r, rclmat)
 
 		## set file path such that we can name rasters with an rc suffix
-		## split x[i] into two parts where the slash occures. first part gives year, second is /rc and third is month file
+		## split x[i] into two parts where the slash occurs. first part gives year, second is /rc and third is month file
 		filepath <- paste0(paste0(unlist(strsplit(x[i], split='/'))[1]), "/rc_", paste0(unlist(strsplit(x[i], split='/'))[2]))
 
 		#write each reclass to a new file 

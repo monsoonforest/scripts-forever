@@ -21,3 +21,6 @@ rename -- "s/\ /-/g" *
 
 ## this will replace the word andamans with the word location *not recursive*
 rename -- "s/andamans/location/g" *
+
+## change the case of letters
+rename 'y/A-Z/a-z/' *

@@ -116,6 +116,7 @@ scale_y_continuous(breaks=c(0,200,400,600,800,1000,1200,1400,1600,1800,2000,2200
 xlab("LOSS YEAR") + ylab("AREA IN HECTARES") + 
 geom_text(aes(label=round(cumsum(Area.ha)), vjust=-0.25)) +
 ggtitle("CUMULATIVE TREE COVER AREA LOST 2001 - 2017") +
+theme_classic() +
 theme(
 	 axis.title.x=element_text(face="bold", size=13),
      axis.title.y=element_text(face="bold", size=13),
@@ -126,27 +127,46 @@ theme(
      legend.position="top",
      plot.title=element_text(face="bold", size = 18, hjust=0.5, colour = "black"))
 
-
-ggsave("PRF-2001-2017-cumulative-loss-areafill.jpeg", plot=arealostyears, height=10, width=10)
-
-arealostyears <- ggplot(data=arealost, aes(x = lossyear, y = Area.ha)) + 
-geom_bar(stat="identity") +
+cumarealostyears <- ggplot(data=arealost, aes(x = lossyear, y = cumsum(Area.sq.km))) + 
+geom_area(stat="identity", fill="#545454") +
 scale_x_continuous(breaks=c(2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017)) + 
-scale_y_continuous(breaks=c(0,50,100,150,200,250,300,350,400,450,500,550,600,800,1000,1200,1400,1600,1800,2000,2200,2400,2600,2800,3000)) +
-xlab("LOSS YEAR") + ylab("AREA IN HECTARES") + 
-geom_text(aes(label=round(Area.ha)), vjust=-0.25) +
-ggtitle("TREE COVER AREA LOST 2001 - 2017") +
+scale_y_continuous(breaks=c(0, 5, 10, 15, 20, 25, 30)) +
+xlab("LOSS YEAR") + ylab("AREA IN SQAURE KILOMETERS") + 
+#geom_text(aes(label=round(cumsum(Area.sq.km)), vjust=-0.25)) + 
+geom_label(aes(label=round(cumsum(Area.sq.km), 1), vjust=-0.25), label.size = 0.15, family="serif") +
+#ggtitle("CUMULATIVE TREE COVER AREA LOST 2001 - 2017") +
+theme_classic() +
 theme(
-      axis.title.x=element_text(face="bold", size=13),
-     axis.title.y=element_text(face="bold", size=13),
-     axis.text.x=element_text(color="black", size =10), 
-     axis.text.y=element_text(color="black", size =10),
+      axis.title.x=element_text(face="bold", size=13, family="serif"),
+     axis.title.y=element_text(face="bold", size=13, family="serif"),
+     axis.text.x=element_text(color="black", size =10, family="serif"), 
+     axis.text.y=element_text(color="black", size =10, family="serif"),
      legend.title=element_blank(),
      legend.text=element_blank(),
      legend.position="top",
      plot.title=element_text(face="bold", size = 18, hjust=0.5, colour = "black"))
 
-ggsave("PRF-2001-2017-loss.jpeg", plot=arealostyears, height=10, width=10)
+ggsave("PRF-2001-2017-cumulative-loss-areafill-simple.jpeg", plot=cumarealostyears, height=10, width=10)
+
+arealostyears <- ggplot(data=arealost, aes(x = lossyear, y = Area.sq.km)) + 
+geom_bar(stat="identity") +
+scale_x_continuous(breaks=c(2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017)) + 
+scale_y_continuous(breaks=c(0, 1, 2, 3, 4, 5, 6,7, 8, 9, 10)) +
+xlab("LOSS YEAR") + ylab("AREA IN SQAURE KILOMETERS") + 
+geom_label(aes(label=round(Area.sq.km, 1), vjust=-0.25),  label.size = 0.15,  family="serif") +
+#ggtitle("TREE COVER AREA LOST 2001 - 2017") +
+theme_classic() +
+theme(
+      axis.title.x=element_text(face="bold", size=13, family="serif"),
+     axis.title.y=element_text(face="bold", size=13, family="serif"),
+     axis.text.x=element_text(color="black", size =10, family="serif"), 
+     axis.text.y=element_text(color="black", size =10, family="serif"),
+     legend.title=element_blank(),
+     legend.text=element_blank(),
+     legend.position="top",
+     plot.title=element_text(face="bold", size = 18, hjust=0.5, colour = "black"))
+
+ggsave("PRF-2001-2017-loss-simple.jpeg", plot=arealostyears, height=10, width=10)
 
 
 ## PLOT TO COMPARE BOTH TREE COVER BASELINES
@@ -338,21 +358,54 @@ jnk$percentage <- jnk$percentage/100
 
 jnk$year <- as.factor(jnk$year)
 
-forestloss <- ggplot(na.omit(jnk), aes(x=year, y=area, fill=class, label=percent(percentage))) + geom_bar(stat="identity") + 
-coord_flip() + 
+jnk1 <- jnk[jnk$year %in% c(2011,2018),]
+
+forestloss <- ggplot(na.omit(jnk1), aes(x=year, y=area, fill=class, label=round(area, 1))) + geom_bar(stat="identity", position="dodge") + 
 scale_fill_manual(values=wes_palette(n=3, name="Cavalcanti1")) +
+scale_y_continuous(breaks=c(0, 5, 10, 15, 20, 25,30,35,40)) + 
 ylab("AREA IN SQUARE KILOMETERS") +
 xlab("YEAR") +
-geom_text(size = 3, position = position_stack(vjust = 0.5), hjust= -0.05,colour="white", fontface = "bold") +
-ggtitle("FOREST LOSS WITHIN PAPUM RESERVE FOREST") +
+#geom_text(size = 3, position = position_dodge(width=1), hjust= 0, vjust=5, colour="black", fontface = "bold", family="TT Times New Roman") +
+theme_classic() +
 theme(
-      axis.title.x=element_text(face="bold", size=13),
-     axis.title.y=element_text(face="bold", size=13),
-     axis.text.x=element_text(color="black", size =10), 
-     axis.text.y=element_text(color="black", size =10),
+      axis.title.x=element_text(face="bold", size=13, family="TT Times New Roman"),
+     axis.title.y=element_text(face="bold", size=13, family="TT Times New Roman"),
+     axis.text.x=element_text(face="bold", size =10, family="TT Times New Roman"), 
+     axis.text.y=element_text(face="bold",  size =10, family="TT Times New Roman"),
      legend.title=element_blank(),
-     legend.text=element_text(color="black", size =10),
+     legend.text=element_text(color="black", size =10, face="bold", family="TT Times New Roman"),
+     legend.justification=c(1.2,1),
+     legend.position=c(1,1),
+     plot.title=element_text(face="bold", size = 18, hjust=0.5, colour = "black"))
+
+ggsave(filename='forest-change-2011and2018.jpeg', plot=forestloss, height=16, width=18,unit='cm')
+
+
+arealost <- read.csv("cell-count-2010-2018.csv")
+jnk2 <- arealost[arealost$class %in% "FOREST",]
+
+## removing 2010
+jnk3 <- jnk2[-1,]
+
+
+cumarealostyears <- ggplot(data=jnk3, aes(x = year, y = area)) + 
+geom_line(stat="identity") +
+scale_x_continuous(breaks=c(2011,2012,2013,2014,2015,2016,2017,2018)) + 
+scale_y_continuous(breaks=c(0, 20,22,24,26,28,30,32,34,36,38,40)) +
+xlab("YEAR") + ylab("FOREST AREA IN SQUARE KILOMETERS") + 
+#geom_text(aes(label=round(cumsum(Area.sq.km)), vjust=-0.25)) + 
+geom_label(aes(label=round(area, 1), vjust=-0.25), label.size = 0.10, family="TT Times New Roman") +     
+#ggtitle("CUMULATIVE TREE COVER AREA LOST 2001 - 2017") +
+theme_classic() +
+theme(
+      axis.title.x=element_text(face="bold", size=13, family="TT Times New Roman"),
+     axis.title.y=element_text(face="bold", size=13, family="TT Times New Roman"),
+     axis.text.x=element_text(face="bold", size =10, family="TT Times New Roman"), 
+     axis.text.y=element_text(face="bold", size =10, family="TT Times New Roman"),
+     legend.title=element_blank(),
+     legend.text=element_blank(),
      legend.position="top",
      plot.title=element_text(face="bold", size = 18, hjust=0.5, colour = "black"))
 
-ggsave(filename='forest-loss-full-reserve-2013-2017.jpeg', plot=forestloss, height=21, width=30,unit='cm')
+
+finalplot <- grid.arrange(cumarealostyears, forestloss, ncol=2)
