@@ -129,7 +129,9 @@ for (i in 1:length(x)) {
 r <- raster(paste0(x[i]))
 
 ## ONLY CONVERT RASTER OF VALUE 1 TO POLYGONS
-poly <-	rasterToPolygons(r, fun=function(x){x==1}, n=4, na.rm=TRUE, digits=12, dissolve=FALSE)
+polyall <-	gdal_polygonizeR(r, outshape=NULL, gdalformat = 'ESRI Shapefile',
+                             pypath=NULL, readpoly=TRUE, quiet=TRUE )
+poly <- polyall[polyall$DN==1,]
 
 ## ASSIGN PROJECTION
 proj4string(poly) <- "+proj=utm +zone=46 +datum=WGS84 +units=m +no_defs +ellps=WGS84 +towgs84=0,0,0"
@@ -137,7 +139,7 @@ proj4string(poly) <- "+proj=utm +zone=46 +datum=WGS84 +units=m +no_defs +ellps=W
 ## CHANGE FIELD NAME
 names(poly) <- "value"
 
-filepath <- paste0("_polygon", unlist(strsplit(basename(x[i]),"\\."))[1])
+filepath <- paste0("poly_", unlist(strsplit(basename(x[i]),"\\."))[1])
 
 writePolyShape(poly,filepath)	
 
