@@ -2,13 +2,20 @@
 
 createdb lemontest
 
-csvsql --db postgresql:///lemontest --tables SITE_DATA --insert /home/user/documents/lemon-india/database-creation/SITE_DATA.csv 
-csvsql --db postgresql:///lemontest --tables LITTERFALL_DATA --insert /home/user/documents/lemon-india/database-creation/seed_trap_flfm-cleanup/sirsi/LITTERFALL_DATA.csv
-csvsql --db postgresql:///lemontest --tables TRAP_CENSUSDATES --insert /home/user/documents/lemon-india/database-creation/seed_trap_flfm-cleanup/sirsi/TRAP_CENSUS.csv
-csvsql --db postgresql:///lemontest --tables TRAP_ID --insert /home/user/documents/lemon-india/database-creation/seed_trap_flfm-cleanup/sirsi/TRAP_ID.csv 
-csvsql --db postgresql:///lemontest --tables SEEDTRAP_DATA --insert /home/user/documents/lemon-india/database-creation/seed_trap_flfm-cleanup/sirsi/SEEDTRAP_DATA.csv 
-csvsql --db postgresql:///lemontest --tables SPECIES_DATA --insert /home/user/documents/lemon-india/database-creation/SPECIES_DATA.csv
-
+csvsql --db postgresql:///lemontest --tables ADULTSTEM_DATA --insert /home/user/documents/lemon-india/database-creation/testing_staging/ADULTSTEM_DATA.csv
+csvsql --db postgresql:///lemontest --tables ADULTSTEM_ID --insert /home/user/documents/lemon-india/database-creation/testing_staging/ADULTSTEM_ID.csv
+csvsql --db postgresql:///lemontest --tables ADULTTREE_CENSUS_DATA --insert /home/user/documents/lemon-india/database-creation/testing_staging/ADULTTREE_CENSUS_DATA.csv
+csvsql --db postgresql:///lemontest --tables ADULTTREE_HEIGHT_CENSUS_DATA --insert /home/user/documents/lemon-india/database-creation/testing_staging/ADULTTREE_HEIGHT_CENSUS_DATA.csv
+csvsql --db postgresql:///lemontest --tables ADULTTREE_HEIGHT --insert /home/user/documents/lemon-india/database-creation/testing_staging/ADULTTREE_HEIGHT.csv
+csvsql --db postgresql:///lemontest --tables ADULTTREE_ID --insert /home/user/documents/lemon-india/database-creation/testing_staging/ADULTTREE_ID.csv
+csvsql --db postgresql:///lemontest --tables DENDROBAND_CENSUS_DATA --insert /home/user/documents/lemon-india/database-creation/testing_staging/DENDROBAND_CENSUS_DATA.csv
+csvsql --db postgresql:///lemontest --tables DENDROBAND_DATA --insert /home/user/documents/lemon-india/database-creation/testing_staging/DENDROBAND_DATA.csv
+csvsql --db postgresql:///lemontest --tables SITE_DATA --insert /home/user/documents/lemon-india/database-creation/testing_staging/SITE_DATA.csv
+csvsql --db postgresql:///lemontest --tables LITTERFALL_DATA --insert /home/user/documents/lemon-india/database-creation/testing_staging/LITTERFALL_DATA.csv
+csvsql --db postgresql:///lemontest --tables TRAP_CENSUSDATES --insert /home/user/documents/lemon-india/database-creation/testing_staging/TRAP_CENSUS.csv
+csvsql --db postgresql:///lemontest --tables TRAP_ID --insert /home/user/documents/lemon-india/database-creation/testing_staging/TRAP_ID.csv
+csvsql --db postgresql:///lemontest --tables SEEDTRAP_DATA --insert /home/user/documents/lemon-india/database-creation/testing_staging/SEEDTRAP_DATA.csv
+csvsql --db postgresql:///lemontest --tables SPECIES_DATA --insert /home/user/documents/lemon-india/database-creation/testing_staging/SPECIES_DATA.csv
 
 ## then type
 
