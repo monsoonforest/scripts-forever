@@ -66,3 +66,18 @@ writeRaster(allbandsTOA, filename = new_file_name, format="GTiff", overwrite=TRU
 }
 
 TOAreflectance(rapideye_image_list)
+
+
+
+
+## to check the range of values in each band of each RapidEye image
+
+toa_image_list <- list.files(pattern=".*TOA.*\\.tif$$", recursive=TRUE)
+
+
+cellStats_function <- function(x,...){
+
+	r <- brick(x)
+	names(r) <- c("blue", "green", "red", "red_edge", "nir")
+	mean <- cellStats(r, mean)
+}
