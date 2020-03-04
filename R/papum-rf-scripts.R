@@ -350,7 +350,7 @@ jnk$year <- as.factor(jnk$year)
 ## SCRIPTS FOR LOSS AREA CALCULATION WITHIN NEST SITES
 
 
-arealost <- read.csv("cell-count-2010-2018.csv")
+arealost <- read.csv("cell-count-2010-2019.csv")
 
 jnk <- arealost[!grepl("TOTAL", arealost$class),]
 
@@ -358,11 +358,16 @@ jnk$percentage <- jnk$percentage/100
 
 jnk$year <- as.factor(jnk$year)
 
-jnk1 <- jnk[jnk$year %in% c(2011,2018),]
+deforestyears <- jnk[jnk$year %in% c(2011,2012,2013,2014,2015,2016,2017,2018,2019),]
 
-forestloss <- ggplot(na.omit(jnk1), aes(x=year, y=area, fill=class, label=round(area, 1))) + geom_bar(stat="identity", position="dodge") + 
-scale_fill_manual(values=wes_palette(n=3, name="Cavalcanti1")) +
+deforestyears$year <- as.numeric(deforestyears$year)
+
+forestloss <- ggplot(na.omit(deforestyears), aes(x=year, y=area, fill=class, label=round(area, 1))) + 
+geom_bar(stat="identity", position="dodge") + 
+scale_fill_manual(values=c("#007f00","#e3d618","#828654")) +
 scale_y_continuous(breaks=c(0, 5, 10, 15, 20, 25,30,35,40)) + 
+geom_segment(aes(y=0,yend=40,x=-Inf,xend=-Inf)) +
+geom_segment(aes(x=0.5,xend=9.5,y=-Inf,yend=-Inf)) +
 ylab("AREA IN SQUARE KILOMETERS") +
 xlab("YEAR") +
 #geom_text(size = 3, position = position_dodge(width=1), hjust= 0, vjust=5, colour="black", fontface = "bold", family="TT Times New Roman") +
@@ -376,21 +381,23 @@ theme(
      legend.text=element_text(color="black", size =10, face="bold", family="TT Times New Roman"),
      legend.justification=c(1.2,1),
      legend.position=c(1,1),
-     plot.title=element_text(face="bold", size = 18, hjust=0.5, colour = "black"))
+     plot.title=element_text(face="bold", size = 18, hjust=0.5, colour = "black"),
+     axis.line=element_blank()
+     )
 
-ggsave(filename='forest-change-2011and2018.jpeg', plot=forestloss, height=16, width=18,unit='cm')
+ggsave(filename='forest-change-2011-to-2019.jpeg', plot=forestloss, height=16, width=21,unit='cm')
 
 
-arealost <- read.csv("cell-count-2010-2018.csv")
+arealost <- read.csv("cell-count-2010-2019.csv")
 jnk2 <- arealost[arealost$class %in% "FOREST",]
 
 ## removing 2010
-jnk3 <- jnk2[-1,]
+forestarea <- jnk2[-1,]
 
 
-cumarealostyears <- ggplot(data=jnk3, aes(x = year, y = area)) + 
+cumarealostyears <- ggplot(data=forestarea, aes(x = year, y = area)) + 
 geom_line(stat="identity") +
-scale_x_continuous(breaks=c(2011,2012,2013,2014,2015,2016,2017,2018)) + 
+scale_x_continuous(breaks=c(2011,2012,2013,2014,2015,2016,2017,2018, 2019)) + 
 scale_y_continuous(breaks=c(0, 20,22,24,26,28,30,32,34,36,38,40)) +
 xlab("YEAR") + ylab("FOREST AREA IN SQUARE KILOMETERS") + 
 #geom_text(aes(label=round(cumsum(Area.sq.km)), vjust=-0.25)) + 
@@ -408,4 +415,76 @@ theme(
      plot.title=element_text(face="bold", size = 18, hjust=0.5, colour = "black"))
 
 
-finalplot <- grid.arrange(cumarealostyears, forestloss, ncol=2)
+
+## LINE PLOT OF ALL CLASSES AND ALL YEARS
+
+forestlossline <- ggplot(deforestyears, aes(x=year, y=area, group=class, label=round(area, 1))) + 
+geom_line(aes(colour=class)) +
+geom_point(aes(fill=class), shape = 21, size = 2, colour="black", stroke = 0.5) +
+scale_colour_manual(values=c("#007f00","#e3d618","#828654")) +
+scale_fill_manual(values=c("#007f00","#e3d618","#828654")) +
+scale_y_continuous(breaks=c(0, 5, 10, 15, 20, 25,30,35,40)) + 
+geom_segment(aes(y=0,yend=40,x=-Inf,xend=-Inf)) +
+geom_segment(aes(x=1,xend=9,y=-Inf,yend=-Inf)) +
+ylab("AREA IN SQUARE KILOMETERS") +
+xlab("YEAR") +
+theme_classic() +
+     theme(
+      axis.title.x=element_text(face="bold", size=13, family="TT Times New Roman"),
+     axis.title.y=element_text(face="bold", size=13, family="TT Times New Roman"),
+     axis.text.x=element_text(face="bold", size =10, family="TT Times New Roman"), 
+     axis.text.y=element_text(face="bold",  size =10, family="TT Times New Roman"),
+     legend.title=element_blank(),
+     legend.text=element_text(color="black", size =10, face="bold", family="TT Times New Roman"),
+     legend.justification=c(1.2,1),
+     legend.position=c(1,1),
+     plot.title=element_text(face="bold", size = 18, hjust=0.5, colour = "black"),
+     axis.line=element_blank()
+     )
+
+     ggsave(filename='forest-change-2011-to-2019.jpeg', plot=forestloss, height=16, width=21,unit='cm')
+
+finalplot <- grid.arrange(cumarealostyears, forestlossline, nrow=2)
+
+ggsave(filename='figure-ii.jpeg', plot=forestlossline, height=16, width=21,unit='cm')
+
+
+ggplot(data=prf, aes(x = year, y = loss_area_ha)) + 
+geom_point() +
+geom_line(stat="identity") +
+scale_x_continuous(breaks=c(2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019)) + 
+scale_y_continuous(limits=c(0,350)) +
+xlab("YEAR") + ylab("LOSS AREA IN HECTARES")+
+theme_classic() +
+theme(
+      axis.title.x=element_text(face="bold", size=13, family="TT Times New Roman"),
+     axis.title.y=element_text(face="bold", size=13, family="TT Times New Roman"),
+     axis.text.x=element_text(face="bold", size =10, family="TT Times New Roman"), 
+     axis.text.y=element_text(face="bold", size =10, family="TT Times New Roman"),
+     legend.title=element_blank(),
+     legend.text=element_blank(),
+     legend.position="top",
+     plot.title=element_text(face="bold", size = 18, hjust=0.5, colour = "black"),
+      axis.line=element_blank())
+
+dev.new()
+
+
+ggplot(data=ptr, aes(x = year, y = loss_area_ha)) + 
+geom_point() +
+geom_line(stat="identity") +
+scale_x_continuous(breaks=c(2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019)) + 
+scale_y_continuous(limits=c(0,350)) +
+xlab("YEAR") + ylab("LOSS AREA IN HECTARES")+
+theme_classic() +
+theme(
+      axis.title.x=element_text(face="bold", size=13, family="TT Times New Roman"),
+     axis.title.y=element_text(face="bold", size=13, family="TT Times New Roman"),
+     axis.text.x=element_text(face="bold", size =10, family="TT Times New Roman"), 
+     axis.text.y=element_text(face="bold", size =10, family="TT Times New Roman"),
+     legend.title=element_blank(),
+     legend.text=element_blank(),
+     legend.position="top",
+     plot.title=element_text(face="bold", size = 18, hjust=0.5, colour = "black"),
+      axis.line=element_blank())
+
