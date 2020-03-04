@@ -3,6 +3,7 @@
 ##LIBRARIES
 library(ggplot2)
 library(dplyr)
+library(hrbrthemes)
 
 ## READ IN THE DATAFRAME AS A TABLE
 alex_volume <- tbl_df(read.csv("Alexandria_volume_2013-2017.csv"))
