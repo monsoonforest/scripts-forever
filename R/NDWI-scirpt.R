@@ -1,4 +1,4 @@
-
+	
 ##  NDWI SCRIPT TO MAP GLACIAL LAKES IN ARUNACHAL
 
 packages <- c("raster", "rgdal", "sp", "plotly", "maptools")
