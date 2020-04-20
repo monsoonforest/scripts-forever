@@ -349,14 +349,17 @@ jnk$year <- as.factor(jnk$year)
 
 ## SCRIPTS FOR LOSS AREA CALCULATION WITHIN NEST SITES
 
+setwd("/home/csheth/documents/work/remote-sensing/papum-reserve-forest/analysis/rapid-eye-classification/forest-non-forest/nest-sites")
 
 arealost <- read.csv("cell-count-2010-2019.csv")
 
 jnk <- arealost[!grepl("TOTAL", arealost$class),]
 
+
 jnk$percentage <- jnk$percentage/100
 
-jnk$year <- as.factor(jnk$year)
+# ## this swtiches the year to a 1 to 19
+# jnk$year <- as.factor(jnk$year)
 
 deforestyears <- jnk[jnk$year %in% c(2011,2012,2013,2014,2015,2016,2017,2018,2019),]
 
@@ -420,12 +423,13 @@ theme(
 
 forestlossline <- ggplot(deforestyears, aes(x=year, y=area, group=class, label=round(area, 1))) + 
 geom_line(aes(colour=class)) +
-geom_point(aes(fill=class), shape = 21, size = 2, colour="black", stroke = 0.5) +
-scale_colour_manual(values=c("#007f00","#e3d618","#828654")) +
+geom_point(aes(fill=class, shape=class), size = 2) +
+scale_colour_manual(values=c("#007f00","#e3d618","#828654")) + 
 scale_fill_manual(values=c("#007f00","#e3d618","#828654")) +
 scale_y_continuous(breaks=c(0, 5, 10, 15, 20, 25,30,35,40)) + 
+scale_x_continuous(breaks=c(2011,2012,2013,2014,2015,2016,2017,2018, 2019)) + 
 geom_segment(aes(y=0,yend=40,x=-Inf,xend=-Inf)) +
-geom_segment(aes(x=1,xend=9,y=-Inf,yend=-Inf)) +
+geom_segment(aes(x=2011,xend=2019,y=-Inf,yend=-Inf)) +
 ylab("AREA IN SQUARE KILOMETERS") +
 xlab("YEAR") +
 theme_classic() +

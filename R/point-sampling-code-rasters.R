@@ -4,6 +4,7 @@ library(raster)
 library(rgdal)
 library(plyr)
 library(dplyr)
+library(stringr)
 
 ## looks for files that DO NOT match the given pattern in grep
 l <- grep(list.files(pattern = ".*.*\\.tif$$", recursive=T), pattern='bio', inv=T, value=T)
@@ -39,3 +40,41 @@ names(lemonsitesdata) <- c("SITEID", "DATASET", "VALUE")
 
 ## now reshape the datasets such that every SITE IS A ROW AND THE DATASETS FOLLOW AS COLUMNS
 jnk3 <- reshape(lemonsitesdata, timevar="DATASET", idvar="SITEID", direction="wide")
+
+
+## FOR POLYGONS
+
+l <- list.files(pattern = ".*.*\\.tif$$", recursive=T)
+
+polygon <- readOGR("/home/csheth/documents/work/remote-sensing/papum-reserve-forest/from-datta/gis-files/papum-reserve-forest-utm46.shp")
+
+extractit <- function(x,...){
+
+	r <- raster(paste(x))
+
+	## names(r) will paste the name of the raster in the dataset as every row
+	data <- data.frame(names(r), extract(r, polygon))
+
+}
+
+jnk <- lapply(l, extractit)
+
+## rename the columns in the dataframe
+for (i in 1: length(jnk)) { names(jnk[[i]]) <- c("cell", "prec")}
+
+## Bind all rows of every dataframe in the list
+allmonths <- bind_rows(jnk)
+
+names(allmonths) <- c("month", "prec")
+
+## Remove the string to reaname it to a month
+allmonths$month <- str_remove_all(allmonths$month, "wc2.1_2.5m_tavg_")
+
+
+##allmonths$month <- str_remove_all(allmonths$month, "wc2.0_30s_prec_")
+
+
+##allmonths$month <- str_replace_all(allmonths$month, c("01" = "January", "02" = "February", "03" = "March", "04"= "April", "05" = "May", "06" = "June", "07" = "July", "08" = "August", "09" = "September", "10" = "October", "11" = "November", "12" = "December"))
+
+
+allmonths %>% group_by(month) %>% summarise_all(mean=mean(prec), SD=sd(prec)) %>% mutate(total=sum(mean))
