@@ -42,7 +42,7 @@ json_name <- paste0(dirname(x[i]),"/", paste0(json_filename), '_metadata.json')
 metadata <- fromJSON(paste0(json_name), flatten=TRUE)
 
 ## COPY SOLAR ZENITH PROPERTY
-SolarZenith <- (90-metadata$properties$sun_elevation)
+SolarZenith <- (90 - metadata$properties$sun_elevation)
 
 ## CALCUALTE TOA FOR EACH BAND
 blueTOA <-     (r[["blue"]] * pi * (EarthSunDist^2) / (EAIblue * cos(SolarZenith*pi/180)))
