@@ -60,12 +60,12 @@ extractit <- function(x,...){
 jnk <- lapply(l, extractit)
 
 ## rename the columns in the dataframe
-for (i in 1: length(jnk)) { names(jnk[[i]]) <- c("cell", "prec")}
+for (i in 1: length(jnk)) { names(jnk[[i]]) <- c("cell", "tavg")}
 
 ## Bind all rows of every dataframe in the list
 allmonths <- bind_rows(jnk)
 
-names(allmonths) <- c("month", "prec")
+names(allmonths) <- c("month", "tavg")
 
 ## Remove the string to reaname it to a month
 allmonths$month <- str_remove_all(allmonths$month, "wc2.1_2.5m_tavg_")
@@ -77,4 +77,4 @@ allmonths$month <- str_remove_all(allmonths$month, "wc2.1_2.5m_tavg_")
 ##allmonths$month <- str_replace_all(allmonths$month, c("01" = "January", "02" = "February", "03" = "March", "04"= "April", "05" = "May", "06" = "June", "07" = "July", "08" = "August", "09" = "September", "10" = "October", "11" = "November", "12" = "December"))
 
 
-allmonths %>% group_by(month) %>% summarise_all(mean=mean(prec), SD=sd(prec)) %>% mutate(total=sum(mean))
+allmonths %>% group_by(month) %>% summarise_all(mean) %>% mutate(mean=mean(tavg), SD=sd(tavg))

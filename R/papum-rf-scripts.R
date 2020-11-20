@@ -375,6 +375,8 @@ ylab("AREA IN SQUARE KILOMETERS") +
 xlab("YEAR") +
 #geom_text(size = 3, position = position_dodge(width=1), hjust= 0, vjust=5, colour="black", fontface = "bold", family="TT Times New Roman") +
 theme_classic() +
+
+
 theme(
       axis.title.x=element_text(face="bold", size=13, family="TT Times New Roman"),
      axis.title.y=element_text(face="bold", size=13, family="TT Times New Roman"),
@@ -446,11 +448,11 @@ theme_classic() +
      axis.line=element_blank()
      )
 
-     ggsave(filename='forest-change-2011-to-2019.jpeg', plot=forestloss, height=16, width=21,unit='cm')
+  #   ggsave(filename='forest-change-2011-to-2019.jpeg', plot=forestloss, height=16, width=21,unit='cm')
 
-finalplot <- grid.arrange(cumarealostyears, forestlossline, nrow=2)
+#finalplot <- grid.arrange(cumarealostyears, forestlossline, nrow=2)
 
-ggsave(filename='figure-ii.jpeg', plot=forestlossline, height=16, width=21,unit='cm')
+ggsave(filename='figure-ii.jpeg', plot=forestlossline, height=16, width=21,unit='cm', dpi=600)
 
 
 ggplot(data=prf, aes(x = year, y = loss_area_ha)) + 
@@ -491,4 +493,77 @@ theme(
      legend.position="top",
      plot.title=element_text(face="bold", size = 18, hjust=0.5, colour = "black"),
       axis.line=element_blank())
+
+
+fsi <- read.csv("FSI-data.csv")
+
+fsiplot <- ggplot(data=fsi, aes(x = as.factor(Year), y = forest_cover)) + 
+geom_bar(stat="identity", colour="black", fill = "#999999", width = 0.6) +
+scale_x_discrete(labels=c(2003,2005,2009,2011,2013,2015,2017)) + 
+coord_cartesian(ylim=c(66500,67800)) +
+scale_y_continuous(breaks = c(66500, 67000,67500,67800)) +
+xlab("ASSESSMENT YEAR") + ylab("LOSS AREA IN SQUARE KILOMETRES")+
+geom_segment(aes(y=66000,yend=67800,x=-Inf,xend=-Inf)) +
+geom_segment(aes(x=0.5,xend=7.5,y=-Inf,yend=-Inf)) +
+theme_classic() +
+theme(
+      axis.title.x=element_text(face="bold", size=13,colour = "black", family="TT Times New Roman"),
+     axis.title.y=element_text(face="bold", size=13, colour = "black", family="TT Times New Roman"),
+     axis.text.x=element_text(face="bold", size =10, colour = "black", family="TT Times New Roman"), 
+     axis.text.y=element_text(face="bold", size =10, colour = "black", family="TT Times New Roman"),
+     legend.title=element_blank(),
+     legend.text=element_blank(),
+     plot.title=element_text(face="bold", size = 18, hjust=0.5, colour = "black"),
+      axis.line=element_blank())
+
+ggsave(filename='supplementary-figure-i.jpeg', plot=fsiplot, height=16, width=21,unit='cm', dpi=600)
+
+library(reshape2)
+library(ggplot2)
+
+nestoccupancy <- read.csv("Nest-occupancy-graph.csv")
+
+colnames(nestoccupancy) <- c("year", "Great hornbill and Wreathed hornbill", "Oriental pied hornbill")
+
+nestmelt <- melt(nestoccupancy, id.vars="year")
+
+
+
+
+
+nestplot <- ggplot(data=nestmelt, aes(x = as.factor(year), y = value, fill=variable)) + 
+geom_bar(stat="identity", position=position_dodge(width=0.7), colour="black", width = 0.7, size=0.4) +
+scale_fill_manual(values=c("#999999", "#1d1d1d")) +
+scale_x_discrete(labels=c(2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019)) + 
+coord_cartesian(ylim=c(0, 100)) +
+scale_y_continuous(breaks = c(0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100)) +
+xlab("YEAR") + ylab("NEST OCCUPANCY") +
+geom_segment(aes(y=0,yend=100,x=-Inf,xend=-Inf)) +
+geom_segment(aes(x=0.5,xend=8.5,y=-Inf,yend=-Inf)) +
+# annotate(geom = "text", x = 1.2, y = 68, label = "#") +
+# annotate(geom = "text", x = 1.8, y = 51, label = "#") +
+# annotate(geom = "text", x = 3.8, y = 42.6, label = "#") +
+# annotate(geom = "text", x = 4.8, y = 59.3, label = "#") +
+# annotate(geom = "text", x = 5.2, y = 66, label = "#") +
+# annotate(geom = "text", x = 5.8, y = 59.3, label = "#") +
+# annotate(geom = "text", x = 6.2, y = 71.5, label = "#") +
+# annotate(geom = "text", x = 6.8, y = 37.3, label = "#") +
+# annotate(geom = "text", x = 7.2, y = 70, label = "#") +
+# annotate(geom = "text", x = 8.2, y = 70.5, label = "#") +
+theme_classic() +
+theme(
+      axis.title.x=element_text(face="bold", size=13,colour = "black", family="TT Times New Roman"),
+     axis.title.y=element_text(face="bold", size=13, colour = "black", family="TT Times New Roman"),
+     axis.text.x=element_text(face="bold", size =10, colour = "black", family="TT Times New Roman"), 
+     axis.text.y=element_text(face="bold", size =10, colour = "black", family="TT Times New Roman"),
+     legend.text=element_text(color="black", size =10, face="bold", family="TT Times New Roman"),
+     legend.title=element_blank(),
+     legend.justification=c(1.2,1),
+     legend.position=c(1,1),
+     legend.key.size = unit(0.8, "cm"),
+     legend.key = element_rect(size=1, fill = "white", colour = "white"),
+     plot.title=element_text(face="bold", size = 18, hjust=0.5, colour = "black"),
+      axis.line=element_blank())
+
+ggsave(filename='supplementary-figure-ii.jpeg', plot=nestplot, height=16, width=21,unit='cm', dpi=600)
 
