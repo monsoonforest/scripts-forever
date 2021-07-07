@@ -44,7 +44,7 @@ var training = s2_composite.sampleRegions({
 
 //----- 4. TRAIN A CLASSIFIER -----
 // Make a Random Forest classifier with 10 trees and train it.
-var classifier = ee.Classifier.randomForest(10).train({
+var classifier = ee.Classifier.smileRandomForest(10).train({
   features: training,
   classProperty: 'label'
 });

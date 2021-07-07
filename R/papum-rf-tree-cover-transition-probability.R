@@ -46,7 +46,7 @@ countsbygroup <- table(jnk[,c("TC2000bins","TC2010bins")])
 
 library(ca)
 ## CORRESPONDENCE ANALYSIS
-plot(ca(countsbygroup))
+	plot(ca(countsbygroup))
 
 transitionmatrix <- countsbygroup/rowSums(countsbygroup)
 

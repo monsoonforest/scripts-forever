@@ -6,7 +6,7 @@ setwd("/home/chintan/documents/work/remote_sensing/analysis/dibang-landcover/")
 library(raster)
 library(maptools)
 
-	
+x <- raster("file.tif")
 
 e <- extent(x)
 
